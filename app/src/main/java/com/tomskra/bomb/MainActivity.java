@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 if (text.equals(CODE)) {
                     return;
                 } else {
-                    //TODO faster sound
+                    //TODO faster soud
                     return;
                 }
 
