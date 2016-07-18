@@ -1,5 +1,6 @@
 package com.tomskra.bomb;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
 
         textView = (TextView) findViewById(R.id.textView);
@@ -56,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String text = textView.getText().toString();
                 if (text.equals(CODE)) {
-                    return;
+                    stopSound();
                 } else {
-                    //TODO faster soud
-                    return;
+                    stopSound();
+                    playSound();
                 }
 
             }
@@ -80,6 +83,36 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(text + pressed);
         }
     };
+
+    public void playSound()
+    {
+        Intent objIntent = new Intent(this, PlaySound.class);
+        startService(objIntent);
+    }
+
+    public void stopSound()
+    {
+        Intent objIntent = new Intent(this, PlaySound.class);
+        stopService(objIntent);
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        playSound();
+    }
+
+    public void onPause()
+    {
+        super.onPause();
+        stopSound();
+    }
+
+    public void onDestroy()
+    {
+        super.onDestroy();
+        stopSound();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
