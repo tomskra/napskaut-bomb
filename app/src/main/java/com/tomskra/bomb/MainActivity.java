@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static String CODE = "267.649.224.635.159";
 
+    private int actual = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +61,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String text = textView.getText().toString();
                 if (text.equals(CODE)) {
-                    stopSound();
+                    Intent intent = new Intent(v.getContext(), SuccessActivity.class);
+                    startActivity(intent);
                 } else {
+                    if (actual == 2){
+                        Intent intent = new Intent(v.getContext(), ExplosionActivity.class);
+                        startActivity(intent);
+                    }
                     stopSound();
-                    playSound();
+                    playSound(actual++);
                 }
 
             }
@@ -84,9 +91,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void playSound()
+    public void playSound(int speed)
     {
         Intent objIntent = new Intent(this, PlaySound.class);
+        objIntent.putExtra("speed", speed);
         startService(objIntent);
     }
 
@@ -99,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume()
     {
         super.onResume();
-        playSound();
+        playSound(actual);
     }
 
     public void onPause()
