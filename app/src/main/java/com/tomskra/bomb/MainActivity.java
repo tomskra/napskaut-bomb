@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString("stav", "vybuch");
                         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                         editor.putString("cas", currentDateTimeString);
-                        editor.commit();
+                        editor.apply();
                         Intent intent = new Intent(v.getContext(), ExplosionActivity.class);
                         startActivity(intent);
                         t1 = new Thread(new Runnable() {
