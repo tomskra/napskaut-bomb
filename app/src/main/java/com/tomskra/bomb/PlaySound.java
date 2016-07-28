@@ -32,7 +32,13 @@ public class PlaySound extends Service
                 sound = R.raw.bombslow;
                 break;
             case 2:
+                sound = R.raw.bombfast1;
+                break;
+            case 3:
                 sound = R.raw.bombfast2;
+                break;
+            case 4:
+                sound = R.raw.explosion;
                 break;
 
             default:

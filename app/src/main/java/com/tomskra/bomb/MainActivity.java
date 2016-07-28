@@ -1,6 +1,10 @@
 package com.tomskra.bomb;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,20 +13,28 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
-    private TextView textView;
+    public TextView textView;
 
     private static String CODE = "267.649.224.635.159";
 
     private int actual = 1;
 
+    public static Thread t1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = preferences.edit();
 
         textView = (TextView) findViewById(R.id.textView);
         Button btn1 = (Button) findViewById(R.id.button1);
@@ -61,15 +73,43 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String text = textView.getText().toString();
                 if (text.equals(CODE)) {
+                    editor.putString("stav", "deaktivovano");
+                    String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+                    editor.putString("cas", currentDateTimeString);
+                    editor.apply();
                     Intent intent = new Intent(v.getContext(), SuccessActivity.class);
                     startActivity(intent);
-                } else {
-                    if (actual == 2){
+                } else if(text.equals("636")){
+                    //zobrazeni casu odpaleni / deaktivace
+                    String stav = preferences.getString("stav", "");
+                    String cas = preferences.getString("cas", "");
+                    textView.setText(stav + cas);
+                }
+                else {
+                    if (actual == 3){
+                        editor.putString("stav", "vybuch");
+                        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+                        editor.putString("cas", currentDateTimeString);
+                        editor.commit();
                         Intent intent = new Intent(v.getContext(), ExplosionActivity.class);
                         startActivity(intent);
+                        t1 = new Thread(new Runnable() {
+                            public void run()
+                            {
+                                playSound(4);
+                            }});
+                        t1.start();
+
                     }
+//                    textView.setTextColor(Color.RED);
+//                    textView.setText("Špatný kód");
+//                    textView.setTextColor(Color.RED);
+//                    SystemClock.sleep(1000);
+//                    textView.setTextColor(Color.BLACK);
+                    textView.setText("");
                     stopSound();
-                    playSound(actual++);
+                    actual++;
+                    playSound(actual);
                 }
 
             }
