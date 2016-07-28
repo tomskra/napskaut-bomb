@@ -1,5 +1,6 @@
 package com.tomskra.bomb;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
@@ -8,11 +9,18 @@ abstract public class AbstractActivity extends AppCompatActivity {
     protected int actual = 1;
     private Intent objIntent;
 
-    public void playSound(int speed)
+    public void playSound(final int speed)
     {
-        objIntent = new Intent(this, PlaySound.class);
-        objIntent.putExtra("speed", speed);
-        startService(objIntent);
+        final Context ctx = this;
+
+        new Thread(new Runnable() {
+            public void run() {
+                objIntent = new Intent(ctx, PlaySound.class);
+                objIntent.putExtra("speed", speed);
+                startService(objIntent);
+            }
+        }).start();
+
     }
 
     public void stopSound()
