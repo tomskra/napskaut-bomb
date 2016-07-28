@@ -2,10 +2,7 @@ package com.tomskra.bomb;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,19 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.sql.Time;
 import java.text.DateFormat;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractActivity {
 
     public TextView textView;
 
     private static String CODE = "267.649.224.635.159";
-
-    private int actual = 1;
-
-    public static Thread t1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,14 +83,9 @@ public class MainActivity extends AppCompatActivity {
                         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
                         editor.putString("cas", currentDateTimeString);
                         editor.apply();
+                        stopSound();
                         Intent intent = new Intent(v.getContext(), ExplosionActivity.class);
                         startActivity(intent);
-                        t1 = new Thread(new Runnable() {
-                            public void run()
-                            {
-                                playSound(4);
-                            }});
-                        t1.start();
 
                     }
 //                    textView.setTextColor(Color.RED);
@@ -108,8 +95,7 @@ public class MainActivity extends AppCompatActivity {
 //                    textView.setTextColor(Color.BLACK);
                     textView.setText("");
                     stopSound();
-                    actual++;
-                    playSound(actual);
+                    playSound(++actual);
                 }
 
             }
@@ -131,18 +117,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void playSound(int speed)
-    {
-        Intent objIntent = new Intent(this, PlaySound.class);
-        objIntent.putExtra("speed", speed);
-        startService(objIntent);
-    }
-
-    public void stopSound()
-    {
-        Intent objIntent = new Intent(this, PlaySound.class);
-        stopService(objIntent);
-    }
 
     public void onResume()
     {
@@ -150,17 +124,6 @@ public class MainActivity extends AppCompatActivity {
         playSound(actual);
     }
 
-    public void onPause()
-    {
-        super.onPause();
-        stopSound();
-    }
-
-    public void onDestroy()
-    {
-        super.onDestroy();
-        stopSound();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

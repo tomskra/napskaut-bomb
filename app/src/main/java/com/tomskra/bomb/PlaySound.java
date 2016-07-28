@@ -24,9 +24,9 @@ public class PlaySound extends Service
 
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        int speed = intent.getIntExtra("speed", 1);
+        int speed = intent.getIntExtra("speed", 0);
 
-        int sound;
+        int sound = 0;
         switch(speed){
             case 1:
                 sound = R.raw.bombslow;
@@ -41,14 +41,14 @@ public class PlaySound extends Service
                 sound = R.raw.explosion;
                 break;
 
-            default:
-                sound = R.raw.bombslow;
+//            default:
+//                sound = R.raw.bombslow;
         }
 
         mp = MediaPlayer.create(this, sound);
         mp.setLooping(true);
         mp.start();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     public void onDestroy()
